@@ -54,6 +54,30 @@ function sepacustom_civicrm_create_mandate(&$mandate_parameters) {
 }
 
 /**
+ * Connect newly generated SEPA contributions 
+ *  to the membership/contract
+ *
+ * @author B. Endres (endres@systopia.de)
+ */
+function sepacustom_installment_created($mandate_id, $contribution_recur_id, $contribution_id) {
+  try {
+    CRM_Core_DAO::executeQuery("
+        INSERT IGNORE INTO civicrm_membership_payment (membership_id,contribution_id)
+         (SELECT 
+           civicrm_value_membership_payment.entity_id AS membership_id,
+           %1 AS contribution_id
+          FROM civicrm_value_membership_payment
+          WHERE membership_recurring_contribution = %2)",
+      array( 1 => array($contribution_id, 'Integer'),
+             2 => array($contribution_recur_id, 'Integer')));    
+  } catch (Exception $e) {
+    // TODO: I don't think this will catch all the potential
+    //   DB problems, especially if the table's aren't there.
+    //   Maybe we need a verification, but *not* for every installment...
+  }
+}
+
+/**
  * Implements hook_civicrm_config().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
