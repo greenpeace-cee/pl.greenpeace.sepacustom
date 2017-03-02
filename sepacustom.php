@@ -78,6 +78,16 @@ function sepacustom_installment_created($mandate_id, $contribution_recur_id, $co
 }
 
 /**
+ * Generate TXN Message
+ *
+ * @see https://redmine.greenpeace.at/issues/434
+ */
+function sepacustom_civicrm_modify_txmessage(&$txmessage, $info, $creditor) {
+  $txmessage = "Greenpeace Beitrag Danke - {$info['reference']}";
+}
+
+
+/**
  * Implements hook_civicrm_config().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
