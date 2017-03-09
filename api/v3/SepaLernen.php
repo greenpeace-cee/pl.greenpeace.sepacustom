@@ -53,7 +53,12 @@ function civicrm_api3_sepa_lernen_find($params) {
   $query = CRM_Core_DAO::executeQuery("SELECT kntsepalearnid, aktionid, personid, vertragid FROM sepa_lernen WHERE {$where_clause} AND status = 1;", $query_parameters);
   $results = array();
   while ($query->fetch()) {
-    $results[$query->kntsepalearnid] = "{$query->aktionid}_{$query->personid}_{$query->vertragid}";
+    $results[$query->kntsepalearnid] = array(
+      'id' => $query->kntsepalearnid,
+      'aktionid'  => $query->aktionid,
+      'personid'  => $query->personid,
+      'vertragid' => $query->vertragid,
+      'reference' => "{$query->aktionid}_{$query->personid}_{$query->vertragid}");
   }
 
   return civicrm_api3_create_success($results);
