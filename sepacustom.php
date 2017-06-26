@@ -18,7 +18,7 @@ require_once 'sepacustom.civix.php';
 
 /**
  * Generate custom SEPA mandate reference
- * 
+ *
  * @see https://redmine.greenpeace.at/issues/460
  *
  * @author B. Endres (endres@systopia.de)
@@ -48,28 +48,20 @@ function sepacustom_civicrm_create_mandate(&$mandate_parameters) {
       return;
     }
   }
-  
+
   error_log("at.greenpeace.sepacustom: Mandate reference generation failed. Please contact SYSTOPIA.");
   CRM_Core_Session::setStatus("Mandate reference generation failed. Please contact SYSTOPIA.", ts('Error'), 'error');
 }
 
 /**
- * Connect newly generated SEPA contributions 
+ * Connect newly generated SEPA contributions
  *  to the membership/contract
  *
  * @author B. Endres (endres@systopia.de)
  */
-function sepacustom_installment_created($mandate_id, $contribution_recur_id, $contribution_id) {
+function sepacustom_civicrm_installment_created($mandate_id, $contribution_recur_id, $contribution_id) {
   try {
-    CRM_Core_DAO::executeQuery("
-        INSERT IGNORE INTO civicrm_membership_payment (membership_id,contribution_id)
-         (SELECT 
-           civicrm_value_membership_payment.entity_id AS membership_id,
-           %1 AS contribution_id
-          FROM civicrm_value_membership_payment
-          WHERE membership_recurring_contribution = %2)",
-      array( 1 => array($contribution_id, 'Integer'),
-             2 => array($contribution_recur_id, 'Integer')));    
+    CRM_Sepacustom_InstallmentProcessor::installmentCreated($mandate_id, $contribution_recur_id, $contribution_id);
   } catch (Exception $e) {
     // TODO: I don't think this will catch all the potential
     //   DB problems, especially if the table's aren't there.
