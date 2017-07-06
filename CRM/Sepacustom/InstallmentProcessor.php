@@ -25,6 +25,22 @@ class CRM_Sepacustom_InstallmentProcessor {
   private static $_creditor_account = array();
 
   /**
+   * processes the OOFF mandate created event,
+   */
+  public static function ooffCreated($mandate_id) {
+    $mandate_id = (int) $mandate_id;
+    // get the contribution
+    $contribution_id = CRM_Core_DAO::singleValueQuery("
+      SELECT entity_id
+        FROM civicrm_sdd_mandate
+       WHERE entity_table = 'civicrm_contribution'
+         AND id = {$mandate_id}");
+
+    // do the update
+    self::updateContributionAccounts($contribution_id, $mandate_id);
+  }
+
+  /**
    * processes civicrm__installment_created event
    */
   public static function installmentCreated($mandate_id, $contribution_recur_id, $contribution_id) {
@@ -45,6 +61,17 @@ class CRM_Sepacustom_InstallmentProcessor {
       //   Maybe we need a verification, but *not* for every installment...
     }
 
+    // then do the update
+    self::updateContributionAccounts($contribution_id, $mandate_id);
+  }
+
+  /**
+   * Update this (SEPA) contribution's accounts
+   */
+  public static function updateContributionAccounts($contribution_id, $mandate_id) {
+    if (empty($contribution_id) || empty($mandate_id)) {
+      return;
+    }
 
     // then: fill the account fields (from_ba, to_ba)
     $contribution_update = array();

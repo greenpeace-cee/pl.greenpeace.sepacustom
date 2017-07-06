@@ -70,6 +70,15 @@ function sepacustom_civicrm_installment_created($mandate_id, $contribution_recur
 }
 
 /**
+ * CiviCRM POST hook to adjust a mandate's OOFF contribution
+ */
+function sepacustom_civicrm_post($op, $objectName, $objectId, &$objectRef) {
+  if ($op == 'create' && $objectName == 'SepaMandate') {
+    CRM_Sepacustom_InstallmentProcessor::ooffCreated($objectId);
+  }
+}
+
+/**
  * Generate TXN Message
  *
  * @see https://redmine.greenpeace.at/issues/434
