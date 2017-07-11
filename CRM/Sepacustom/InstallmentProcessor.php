@@ -141,13 +141,21 @@ class CRM_Sepacustom_InstallmentProcessor {
       // not known yet: get group first
       if (!array_key_exists($custom_group_name, self::$_custom_groups)) {
         // group is not known either!
-        $custom_group = civicrm_api3('CustomGroup', 'getsingle', array(
+        $custom_groups = civicrm_api3('CustomGroup', 'get', array(
             'name'   => $custom_group_name,
             'return' => 'id'));
-        self::$_custom_groups[$custom_group_name] = $custom_group;
+        if ($custom_groups['count']) {
+          self::$_custom_groups[$custom_group_name] = reset($custom_groups['values']);
+        } else {
+          self::$_custom_groups[$custom_group_name] = NULL;
+        }
       }
 
       // now: load the field
+      if (!isset(self::$_custom_groups[$custom_group_name])) {
+        return '_field_not_found';
+      }
+
       $custom_field = civicrm_api3('CustomField', 'getsingle', array(
         'custom_group_id' => self::$_custom_groups[$custom_group_name]['id'],
         'name'            => $custom_field_name,
