@@ -156,11 +156,16 @@ class CRM_Sepacustom_InstallmentProcessor {
         return '_field_not_found';
       }
 
-      $custom_field = civicrm_api3('CustomField', 'getsingle', array(
+      $custom_field = civicrm_api3('CustomField', 'get', array(
         'custom_group_id' => self::$_custom_groups[$custom_group_name]['id'],
         'name'            => $custom_field_name,
+        'options.limit'   => 2,
         'return'          => 'id'));
-      self::$_custom_fields[$cache_key] = $custom_field;
+      if ($custom_field['count'] == 1) {
+        self::$_custom_fields[$cache_key] = reset($custom_field['values']);
+      } else {
+        return '_field_not_found';
+      }
     }
 
     // process the custom field
