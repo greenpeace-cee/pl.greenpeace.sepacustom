@@ -33,7 +33,7 @@ function civicrm_api3_sepa_lernen_find($params) {
   $result = $sepa_lernen->deriveData($params);
   if ($result) {
     $result['reference'] = "{$result['aktionid']}_{$result['personid']}_{$result['vertragid']}";
-    return civicrm_api3_create_success($results);
+    return civicrm_api3_create_success($result);
   } else {
     return civicrm_api3_create_error("No match");
   }

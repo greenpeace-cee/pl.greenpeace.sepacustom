@@ -69,7 +69,7 @@ class CRM_Sepacustom_SepaLernen {
         if ($value && isset($params[$key])) {
           if ($params[$key] != $value) {
             // the parameter differs
-            error_log("$params[$key] != $value");
+            // error_log("$params[$key] != $value");
             $matched = FALSE;
             break;
           }
@@ -77,6 +77,7 @@ class CRM_Sepacustom_SepaLernen {
       }
 
       if ($matched) {
+        // error_log("MATCHED $entry_id");
         $entry = $this->getEntry($entry_id);
         if ($derived_data === NULL) {
           $derived_data = $entry;
@@ -84,6 +85,7 @@ class CRM_Sepacustom_SepaLernen {
 
         } else {
           // merge
+          // error_log("MERGING " . json_encode($derived_data) . ' AND ' . json_encode($entry));
           $new_derived_data = array();
           $new_derived_attributes = array();
           foreach ($derived_attributes as $attribute) {
@@ -103,9 +105,10 @@ class CRM_Sepacustom_SepaLernen {
           // move to the new set
           $derived_data = $new_derived_data;
           $derived_attributes = $new_derived_attributes;
+          // error_log("RESULT " . json_encode($derived_data) . ' AND ' . json_encode($entry));
         }
       }
-      throw new Exception("STAHP", 1);
+      // throw new Exception("STAHP", 1);
     }
 
     return $derived_data;
