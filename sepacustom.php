@@ -54,6 +54,46 @@ function sepacustom_civicrm_create_mandate(&$mandate_parameters) {
 }
 
 /**
+ * This hook is called when a new transaction group is generated
+ *
+ * The default implementation is "TXG-${creditor_id}-${mode}-${collection_date}"
+ *
+ * Be aware the the reference has to be unique. You will have to use suffixes
+ *  if your preferred reference is already in use.
+ *
+ * @param $reference        string  currently proposed reference (max. 35 characters!)
+ * @param $collection_date  string  scheduled collection date
+ * @param $mode             string  SEPA mode (OOFF, RCUR, FRST)
+ * @param $creditor_id      string  SDD creditor ID
+ *
+ * @access public
+ */
+function sepacustom_civicrm_modify_txgroup_reference(&$reference, $creditor_id, $mode, $collection_date) {
+  $base_reference = substr($mode, 0, 1) . "{$creditor_id}-{$collection_date}";
+  $suffix = 0;
+
+  while ($suffix < 1000) {
+    // generate new reference
+    if ($suffix) {
+      $reference = $base_reference . "-{$suffix}";
+    } else {
+      $reference = $base_reference;
+    }
+
+    // check if it exists
+    $reference_exists = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_sdd_txgroup WHERE reference = %1",
+      array(1 => array($reference, 'String')));
+    if (!$reference_exists) {
+      // we found it!
+      return;
+    } else {
+      $suffix += 1;
+    }
+  }
+}
+
+
+/**
  * Connect newly generated SEPA contributions
  *  to the membership/contract
  *
