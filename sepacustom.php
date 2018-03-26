@@ -17,6 +17,47 @@
 require_once 'sepacustom.civix.php';
 
 /**
+ * This hook lets defer the collection date according to your banks preferences.
+ * Most banks will only accept collection days that comply with their 'bank days'
+ *
+ * In this implementation, we only prevent the collection day to be on weekend,
+ * but -depending on your bank- you might want to include national holidays as well.
+ */
+function sepacustom_civicrm_defer_collection_date(&$collection_date, $creditor_id) {
+  $at_bank_holidays = array('2018-01-01',
+                            '2018-03-30',
+                            '2018-04-02',
+                            '2018-05-01',
+                            '2018-05-10',
+                            '2018-05-21',
+                            '2018-05-31',
+                            '2018-08-15',
+                            '2018-10-26',
+                            '2018-11-01',
+                            '2018-12-25',
+                            '2018-12-26',
+                            '2019-01-01',
+                            '2019-04-19',
+                            '2019-04-22',
+                            '2019-05-01',
+                            '2019-05-31',
+                            '2019-06-10',
+                            '2019-06-20',
+                            '2019-08-15',
+                            '2019-10-26',
+                            '2019-11-01',
+                            '2019-12-24',
+                            '2019-12-25',
+                            '2019-12-26');
+
+  while ( date('N', strtotime($collection_date)) > 5            // if Saturday or Sunday
+          || in_array($collection_date, $at_bank_holidays)) {   // ...or bank holiday
+    // defer by one day
+    $collection_date = date('Y-m-d', strtotime("+1 day", strtotime($collection_date)));
+  }
+}
+
+/**
  * Generate custom SEPA mandate reference
  *
  * @see https://redmine.greenpeace.at/issues/460
