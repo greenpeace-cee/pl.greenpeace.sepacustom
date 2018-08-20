@@ -1,4 +1,4 @@
-Package: at.greenpeace.sepacustom
+Package: pl.greenpeace.sepacustom
 Copyright (C) 2017, systopia <endres@systopia.de>
 Licensed under the GNU Affero Public License 3.0 (below).
 

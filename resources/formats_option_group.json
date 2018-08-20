@@ -1,0 +1,20 @@
+{
+  "_comment": "register PL file format",
+  "_lookup": ["name"],
+  "_translate": ["title"],
+  "name": "sepa_file_format",
+  "title": "SEPA File Formats",
+  "is_active": "1",
+  "_values": [
+    {
+      "_lookup": ["value"],
+      "_translate": ["label"],
+      "label": "Bank Pekao PL direct debit (.pld)",
+      "value": "9",
+      "name": "bankpekaopl",
+      "filter": "0",
+      "is_reserved": "0",
+      "is_active": "1"
+    }
+  ]
+}

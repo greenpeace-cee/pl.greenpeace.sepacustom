@@ -175,7 +175,7 @@ function _sepacustom_civix_civicrm_managed(&$entities) {
     $es = include $file;
     foreach ($es as $e) {
       if (empty($e['module'])) {
-        $e['module'] = 'at.greenpeace.sepacustom';
+        $e['module'] = 'pl.greenpeace.sepacustom';
       }
       $entities[] = $e;
     }
@@ -204,7 +204,7 @@ function _sepacustom_civix_civicrm_caseTypes(&$caseTypes) {
       // throw new CRM_Core_Exception($errorMessage);
     }
     $caseTypes[$name] = array(
-      'module' => 'at.greenpeace.sepacustom',
+      'module' => 'pl.greenpeace.sepacustom',
       'name' => $name,
       'file' => $file,
     );
@@ -230,7 +230,7 @@ function _sepacustom_civix_civicrm_angularModules(&$angularModules) {
     $name = preg_replace(':\.ang\.php$:', '', basename($file));
     $module = include $file;
     if (empty($module['ext'])) {
-      $module['ext'] = 'at.greenpeace.sepacustom';
+      $module['ext'] = 'pl.greenpeace.sepacustom';
     }
     $angularModules[$name] = $module;
   }

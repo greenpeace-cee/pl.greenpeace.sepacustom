@@ -1,8 +1,9 @@
 <?php
 /*-------------------------------------------------------+
-| Greenpeace AT CiviSEPA Customisations                  |
+| Greenpeace PL CiviSEPA Customisations                  |
 | Copyright (C) 2017 SYSTOPIA                            |
 | Author: B. Endres (endres -at- systopia.de)            |
+|   G. Aicher (georg.aicher -at- aicher-consulingt.at    |
 | http://www.systopia.de/                                |
 +--------------------------------------------------------+
 | This program is released as free software under the    |
@@ -23,30 +24,33 @@ require_once 'sepacustom.civix.php';
  * In this implementation, we only prevent the collection day to be on weekend,
  * but -depending on your bank- you might want to include national holidays as well.
  */
+ /*prepared holidays but are not needed as Michal Pisarski*/
+ /*
 function sepacustom_civicrm_defer_collection_date(&$collection_date, $creditor_id) {
   $at_bank_holidays = array('2018-01-01',
-                            '2018-03-30',
+                            '2018-01-06',
+                            '2018-04-01',
                             '2018-04-02',
                             '2018-05-01',
-                            '2018-05-10',
-                            '2018-05-21',
+                            '2018-05-03',
+                            '2018-05-20',
                             '2018-05-31',
                             '2018-08-15',
-                            '2018-10-26',
                             '2018-11-01',
+                            '2018-11-11',
                             '2018-12-25',
                             '2018-12-26',
                             '2019-01-01',
-                            '2019-04-19',
+                            '2019-01-06',
+                            '2019-04-21',
                             '2019-04-22',
                             '2019-05-01',
-                            '2019-05-31',
-                            '2019-06-10',
+                            '2019-05-03',
+                            '2019-06-09',
                             '2019-06-20',
                             '2019-08-15',
-                            '2019-10-26',
                             '2019-11-01',
-                            '2019-12-24',
+                            '2019-11-11',
                             '2019-12-25',
                             '2019-12-26');
 
@@ -56,13 +60,19 @@ function sepacustom_civicrm_defer_collection_date(&$collection_date, $creditor_i
     $collection_date = date('Y-m-d', strtotime("+1 day", strtotime($collection_date)));
   }
 }
+*/
 
 /**
+ * original for GPA:
  * Generate custom SEPA mandate reference
  *
  * @see https://redmine.greenpeace.at/issues/460
  *
  * @author B. Endres (endres@systopia.de)
+ *
+ * adapted for GPPL
+ *
+ * @see
  */
 function sepacustom_civicrm_create_mandate(&$mandate_parameters) {
   if (isset($mandate_parameters['reference']) && !empty($mandate_parameters['reference']))
@@ -90,7 +100,7 @@ function sepacustom_civicrm_create_mandate(&$mandate_parameters) {
     }
   }
 
-  error_log("at.greenpeace.sepacustom: Mandate reference generation failed. Please contact SYSTOPIA.");
+  error_log("pl.greenpeace.sepacustom: Mandate reference generation failed. Please contact SYSTOPIA.");
   CRM_Core_Session::setStatus("Mandate reference generation failed. Please contact SYSTOPIA.", ts('Error'), 'error');
 }
 
@@ -214,6 +224,9 @@ function sepacustom_civicrm_uninstall() {
  */
 function sepacustom_civicrm_enable() {
   _sepacustom_civix_civicrm_enable();
+
+  $customData = new CRM_Sepacustom_CustomData('pl.greenpeace.sepacustom');
+  $customData->syncOptionGroup(__DIR__ . '/resources/formats_option_group.json');
 }
 
 /**
