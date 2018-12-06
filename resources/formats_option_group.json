@@ -10,7 +10,6 @@
       "_lookup": ["value"],
       "_translate": ["label"],
       "label": "Bank Pekao PL direct debit (.pld)",
-      "value": "9",
       "name": "bankpekaopl",
       "filter": "0",
       "is_reserved": "0",
