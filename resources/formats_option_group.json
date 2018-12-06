@@ -7,7 +7,7 @@
   "is_active": "1",
   "_values": [
     {
-      "_lookup": ["value"],
+      "_lookup": ["name"],
       "_translate": ["label"],
       "label": "Bank Pekao PL direct debit (.pld)",
       "name": "bankpekaopl",
