@@ -18,10 +18,18 @@
   <version>1.0.2</version>
   <develStage>stable</develStage>
   <compatibility>
-    <ver>4.6</ver>
+    <ver>5.69</ver>
   </compatibility>
-  <comments></comments>
+  <comments/>
   <civix>
     <namespace>CRM/Sepacustom</namespace>
+    <format>23.02.1</format>
   </civix>
+  <classloader>
+    <psr0 prefix="CRM_" path="."/>
+    <psr4 prefix="Civi\" path="Civi"/>
+  </classloader>
+  <mixins>
+    <mixin>smarty-v2@1.0.1</mixin>
+  </mixins>
 </extension>
